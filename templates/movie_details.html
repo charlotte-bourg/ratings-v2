@@ -3,7 +3,7 @@
 {% block title %}{{ movie.title }} - Details{% endblock %}
 
 {% block body %}
-{% if logged_in %}
+{% if 'user_id' in session %}
 <label for="movie-rating">Rate this movie!</label>
 <form method="POST" action="/movies/{{ movie.movie_id }}">
 <select name="movie-rating" id="ratings">
@@ -17,7 +17,7 @@
 <input type="submit"> 
 </form>
 {% endif %}
-{% if not logged_in %}
+{% if 'user_id' not in session %}
   <p>To add a rating to a movie, please log in!<</p>
 {% endif %}
 <h1>{{ movie.title }}</h1>
@@ -25,11 +25,48 @@
   <th>SCORE</th>
   <th>USER</th>
     {% for rating in movie.ratings %}
-    <tr> <td>{{ rating.score}}</td> <td>{{ rating.user.email }}</td> </tr>
+    <tr> <td>{{ rating.score}}</td> <td>{{ rating.user.email }}</td> <td> 
+      {% if 'user_id' in session and session['user_id'] == rating.user.user_id %} <button id="update-rating" class="{{ rating.rating_id }}">Update Rating</button></td>
+  <td><select name='user-rating-chosen' id='user-rating-chosen' class="{{ rating.rating_id }}">
+  <option value="0">0</option>
+  <option value="1">1</option>
+  <option value="2">2</option>
+  <option value="3">3</option>
+  <option value="4">4</option>
+  <option value="5">5</option>
+    </select></td></tr> 
+      {% endif %}
     {% endfor %}
-</table>  
+</table>
+{% block js %}
+<script>
+  const button = document.querySelectorAll('#update-rating');
+  
+  for (const i = 0; i < button.length; i++) {
+    button[i].addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    const formInputs = {
+      rating_id: button[i].getAttribute('class'),
+      updated_score: document.querySelector(`user-rating-chosen .${rating_id}`),
+    };
+    console.log(formInputs);
+  }}
+</script>
+{% endblock %}
+      // fetch('/', //to update route here 
+      // {
+      //   method: 'POST',
+      //   body: JSON.stringify(formInputs),
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   }
+      // })
+      // .then((response) => response())
+      // .then()
+
 <p>
-  {{ movie.overview }}
+{{ movie.overview }}
 </p>
 
 <img src="{{ movie.poster_path }}">

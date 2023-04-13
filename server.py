@@ -26,10 +26,7 @@ def show_all_movies():
 def show_movie(movie_id):
 
     movie = crud.get_movie_by_id(movie_id)
-    logged_in = False
-    if "user_id" in session:
-        logged_in = True
-    return render_template("movie_details.html", movie=movie, logged_in=logged_in)
+    return render_template("movie_details.html", movie=movie)
 
 @app.route('/users')
 def show_all_users():
@@ -84,11 +81,8 @@ def submit_rating(movie_id):
     rating = crud.create_rating(current_user, movie, user_rating)
     db.session.add(rating)
     db.session.commit()
-    logged_in = False
     flash(f"Added a rating of {user_rating}")
-    if "user_id" in session:
-        logged_in = True
-    return render_template('movie_details.html', movie = movie, logged_in=logged_in)
+    return render_template('movie_details.html', movie = movie)
     
     
 

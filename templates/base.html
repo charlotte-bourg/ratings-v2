@@ -8,6 +8,7 @@
     </title>
 
     {% block head %}{% endblock %}
+    {% block js %}{% endblock %}
   </head>
   <body>
     {% for msg in get_flashed_messages() %}
@@ -19,5 +20,6 @@
     {% block body %}{% endblock %}
 
     {% block after_body %}{% endblock %}
+    
   </body>
 </html>
