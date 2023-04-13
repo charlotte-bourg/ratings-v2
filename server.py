@@ -36,6 +36,24 @@ def show_all_users():
 
     return render_template('all_users.html', users = users)
 
+@app.route('/users', methods = ['POST'])
+def create_user():
+    
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    if not crud.get_user_by_email(email):
+        flash("Popcorn time baby!")
+        user = crud.create_user(email,password)
+        db.session.add(user)
+        db.session.commit()
+    else:
+        flash("Unfortunately someone already used that email ):")
+    
+
+    return redirect('/')
+    
+
 @app.route('/users/<user_id>')
 def show_user(user_id):
 
