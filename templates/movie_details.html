@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 
 {% block title %}{{ movie.title }} - Details{% endblock %}
-<!-- /users/{{ user.user_id }} -->
+
 {% block body %}
+{% if logged_in %}
 <label for="movie-rating">Rate this movie!</label>
-<form action="/movies/{{ movie.movie_id }}/rate-movie">
+<form method="POST" action="/movies/{{ movie.movie_id }}">
 <select name="movie-rating" id="ratings">
   <option value="0">0</option>
   <option value="1">1</option>
@@ -15,6 +16,10 @@
 </select>
 <input type="submit"> 
 </form>
+{% endif %}
+{% if not logged_in %}
+  <p>To add a rating to a movie, please log in!<</p>
+{% endif %}
 <h1>{{ movie.title }}</h1>
 <table>
   <th>SCORE</th>
