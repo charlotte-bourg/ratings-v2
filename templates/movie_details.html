@@ -1,10 +1,28 @@
 {% extends 'base.html' %}
 
 {% block title %}{{ movie.title }} - Details{% endblock %}
-
+<!-- /users/{{ user.user_id }} -->
 {% block body %}
+<label for="movie-rating">Rate this movie!</label>
+<form action="/movies/{{ movie.movie_id }}/rate-movie">
+<select name="movie-rating" id="ratings">
+  <option value="0">0</option>
+  <option value="1">1</option>
+  <option value="2">2</option>
+  <option value="3">3</option>
+  <option value="4">4</option>
+  <option value="5">5</option>
+</select>
+<input type="submit"> 
+</form>
 <h1>{{ movie.title }}</h1>
-
+<table>
+  <th>SCORE</th>
+  <th>USER</th>
+    {% for rating in movie.ratings %}
+    <tr> <td>{{ rating.score}}</td> <td>{{ rating.user.email }}</td> </tr>
+    {% endfor %}
+</table>  
 <p>
   {{ movie.overview }}
 </p>

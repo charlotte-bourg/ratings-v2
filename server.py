@@ -53,6 +53,18 @@ def create_user():
 
     return redirect('/')
     
+@app.route('/login', methods = ['POST'])
+def user_login():
+    email = request.form.get("email")
+    password = request.form.get("password")
+    user = crud.get_user_by_email(email)
+    if user.password == password:
+        flash("Logged in!")
+        session["user_id"] = user.user_id
+    else:
+        flash("Wrong password!")
+        
+    return redirect('/')
 
 @app.route('/users/<user_id>')
 def show_user(user_id):
@@ -60,6 +72,19 @@ def show_user(user_id):
     user = crud.get_user_by_id(user_id)
 
     return render_template('user_details.html', user = user)
+
+@app.route('/movies/<movie_id>/rate-movie')
+def submit_rating(movie_id):
+
+    user_rating = request.args.get("movie-rating")
+    current_user = crud.get_user_by_id(session["user_id"])
+    movie = crud.get_movie_by_id(movie_id)
+    rating = crud.create_rating(current_user, movie, user_rating)
+    db.session.add(rating)
+    db.session.commit()
+    return render_template('movie_details.html', movie = movie)
+    
+    
 
 if __name__ == "__main__":
     connect_to_db(app)
